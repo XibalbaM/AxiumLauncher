@@ -6,10 +6,11 @@ import fr.xibalba.launcher.config.Config;
 import fr.xibalba.launcher.lang.Lang;
 import fr.xibalba.launcher.main.AxiumLauncher;
 import fr.xibalba.launcher.main.Const;
-import fr.xibalba.launcher.ui.PanelManager;
 import fr.xibalba.launcher.ui.panel.Panel;
+import fr.xibalba.launcher.ui.panels.popups.PopupSettings;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -24,9 +25,9 @@ public class TopPanel extends Panel {
 
 
     @Override
-    public void init(PanelManager manager) {
+    public void init() {
 
-        super.init(manager);
+        super.init();
         this.topBar = this.layout;
         this.layout.getStylesheets().add(getClass().getClassLoader().getResource("style/top.css").toString());
         this.layout.setBackground(new Background(new BackgroundFill(Color.rgb(31,35,37), CornerRadii.EMPTY, Insets.EMPTY)));
@@ -66,6 +67,14 @@ public class TopPanel extends Panel {
     private void initAxiumMenu() {
         Menu axium = new Menu("Axium");
 
+        MenuItem params = new MenuItem(Lang.getText(this, "params"));
+        //params.setOnAction(event -> AxiumLauncher.getPanelManager().showPopup(new PopupSettings()));
+        params.setOnAction(event -> {
+            System.out.println("hi");
+            new PopupSettings();
+        });
+
+        axium.getItems().add(params);
 
         menuBar.getMenus().add(axium);
     }
@@ -97,19 +106,19 @@ public class TopPanel extends Panel {
         l_default.setOnAction(event -> {
             AxiumLauncher.getConfigManager().setProperty(Config.LANGUAGE, "en");
             AxiumLauncher.getPanelManager().updateTopBar();
-            AxiumLauncher.getPanelManager().updatePanel();
+            AxiumLauncher.getPanelManager().update();
         });
         MenuItem l_english = new MenuItem("ENGLISH");
         l_english.setOnAction(event -> {
             AxiumLauncher.getConfigManager().setProperty(Config.LANGUAGE, "en");
             AxiumLauncher.getPanelManager().updateTopBar();
-            AxiumLauncher.getPanelManager().updatePanel();
+            AxiumLauncher.getPanelManager().update();
         });
         MenuItem l_french = new MenuItem("FRANCAIS");
         l_french.setOnAction(event -> {
             AxiumLauncher.getConfigManager().setProperty(Config.LANGUAGE, "fr");
             AxiumLauncher.getPanelManager().updateTopBar();
-            AxiumLauncher.getPanelManager().updatePanel();
+            AxiumLauncher.getPanelManager().update();
         });
         language.getItems().addAll(l_default, l_english, l_french);
 
@@ -139,6 +148,7 @@ public class TopPanel extends Panel {
         close.setFill(Color.WHITE);
         close.setOpacity(0.70f);
         close.setSize("18.0px");
+        close.setCursor(Cursor.HAND);
         close.setOnMouseEntered(e -> close.setOpacity(1.0f));
         close.setOnMouseExited(e -> close.setOpacity(0.70f));
         close.setOnMouseClicked(e -> {
@@ -149,20 +159,21 @@ public class TopPanel extends Panel {
         fullScreen.setFill(Color.WHITE);
         fullScreen.setOpacity(0.70f);
         fullScreen.setSize("16.0px");
+        fullScreen.setCursor(Cursor.HAND);
         fullScreen.setOnMouseEntered(e -> fullScreen.setOpacity(1.0f));
         fullScreen.setOnMouseExited(e -> fullScreen.setOpacity(0.70f));
-        fullScreen.setOnMouseClicked(e -> this.panelManager.getStage().setMaximized(!this.panelManager.getStage().isMaximized()));
+        fullScreen.setOnMouseClicked(e -> AxiumLauncher.getPanelManager().getStage().setMaximized(!AxiumLauncher.getPanelManager().getStage().isMaximized()));
 
         fullScreen.setTranslateX(50.0d);
 
         hide.setFill(Color.WHITE);
         hide.setOpacity(0.70f);
         hide.setSize("16.0px");
+        hide.setCursor(Cursor.HAND);
         hide.setOnMouseEntered(e -> hide.setOpacity(1.0f));
         hide.setOnMouseExited(e -> hide.setOpacity(0.70f));
-        hide.setOnMouseClicked(e -> this.panelManager.getStage().setIconified(true));
+        hide.setOnMouseClicked(e -> AxiumLauncher.getPanelManager().getStage().setIconified(true));
         hide.setTranslateX(26.0d);
-
         topBarButton.getChildren().addAll(close, fullScreen, hide);
     }
 

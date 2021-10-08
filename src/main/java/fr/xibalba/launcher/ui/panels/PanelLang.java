@@ -1,10 +1,8 @@
 package fr.xibalba.launcher.ui.panels;
 
-import fr.xibalba.launcher.main.AxiumLauncher;
 import fr.xibalba.launcher.config.Config;
-import fr.xibalba.launcher.ui.PanelManager;
+import fr.xibalba.launcher.main.AxiumLauncher;
 import fr.xibalba.launcher.ui.panel.Panel;
-import fr.xibalba.utils.song.Song;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -21,12 +19,11 @@ public class PanelLang extends Panel {
 
     private final GridPane pane = new GridPane();
     private String language = "en";
-    private Song song = new Song("C:\\Users\\Xibalba\\Desktop\\piste.wav");
 
     @Override
-    public void init(PanelManager panelManager) {
+    public void init() {
 
-        super.init(panelManager);
+        super.init();
 
         initPane();
         initMain();
@@ -76,7 +73,7 @@ public class PanelLang extends Panel {
             }
         });
 
-        Button button = new Button("Michel");
+        Button button = new Button("Done");
         GridPane.setVgrow(button, Priority.ALWAYS);
         GridPane.setHgrow(button, Priority.ALWAYS);
         GridPane.setValignment(button, VPos.BOTTOM);
@@ -84,7 +81,7 @@ public class PanelLang extends Panel {
         button.setTranslateY(-100);
         button.setOnMouseClicked(event -> {
             AxiumLauncher.getConfigManager().setProperty(Config.LANGUAGE, language);
-            AxiumLauncher.getPanelManager().showPanel(new PanelLogin());
+            AxiumLauncher.getPanelManager().showPanel(AxiumLauncher.getPanelManager().getPanelLogin());
             AxiumLauncher.getPanelManager().updateTopBar();
         });
 

@@ -1,14 +1,17 @@
 package fr.xibalba.launcher.ui.panels;
 
-import fr.xibalba.launcher.main.AxiumLauncher;
+import fr.xibalba.launcher.config.Config;
 import fr.xibalba.launcher.lang.Lang;
-import fr.xibalba.launcher.ui.PanelManager;
+import fr.xibalba.launcher.main.AxiumLauncher;
 import fr.xibalba.launcher.ui.panel.Panel;
+import fr.xibalba.utils.MdpUtils;
 import fr.xibalba.utils.javaFX.Link;
+import fr.xibalba.utils.javaFX.ShowablePasswordField;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Cursor;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
@@ -18,11 +21,23 @@ public class PanelLogin extends Panel {
     private final GridPane loginPanel = new GridPane();
     private final GridPane mainPanel = new GridPane();
     private final GridPane bottomPanel = new GridPane();
+    private TextField emailField;
+    private ShowablePasswordField passwordField;
+    private CheckBox rememberPassword;
+    private Button connectionButton;
 
     @Override
-    public void init(PanelManager panelManager) {
+    public void init() {
 
-        super.init(panelManager);
+        super.init();
+
+        if (Boolean.valueOf(AxiumLauncher.getConfigManager().getProperty(Config.REMEMBER_PASSWORD))) {
+            if (AxiumLauncher.getConfigManager().getProperty(Config.EMAIL) != null && AxiumLauncher.getConfigManager().getProperty(Config.EMAIL) != "" && AxiumLauncher.getConfigManager().getProperty(Config.PASSWORD) != null && AxiumLauncher.getConfigManager().getProperty(Config.PASSWORD) != "") {
+                if (tryLogin(AxiumLauncher.getConfigManager().getProperty(Config.EMAIL), MdpUtils.decrypt(AxiumLauncher.getConfigManager().getProperty(Config.PASSWORD)))) {
+                    AxiumLauncher.getPanelManager().showPanel(AxiumLauncher.getPanelManager().getHomePanel());
+                }
+            }
+        }
 
         initLoginPanel();
         initMain();
@@ -65,7 +80,42 @@ public class PanelLogin extends Panel {
         initMainEmail();
         initMainPassword();
 
+        rememberPassword = new CheckBox(Lang.getText(this, "rememberPassword"));
+        GridPane.setVgrow(rememberPassword, Priority.ALWAYS);
+        GridPane.setHgrow(rememberPassword, Priority.ALWAYS);
+        GridPane.setValignment(rememberPassword, VPos.TOP);
+        GridPane.setHalignment(rememberPassword, HPos.LEFT);
+        rememberPassword.setSelected(Boolean.valueOf(AxiumLauncher.getConfigManager().getProperty(Config.REMEMBER_PASSWORD)));
+        rememberPassword.setStyle("-fx-font-size: 16px; -fx-text-fill: #e5e5e5");
+        rememberPassword.setTranslateX(37.5);
+        rememberPassword.setTranslateY(280);
+        rememberPassword.selectedProperty().addListener(observable -> {
+            AxiumLauncher.getConfigManager().setProperty(Config.REMEMBER_PASSWORD, String.valueOf(rememberPassword.isSelected()));
 
+            if (rememberPassword.isSelected()) {
+                AxiumLauncher.getConfigManager().setProperty(Config.PASSWORD, MdpUtils.encrypt(passwordField.passwordField.getText()));
+            } else {
+                AxiumLauncher.getConfigManager().setProperty(Config.PASSWORD, "");
+            }
+        });
+
+        connectionButton = new Button("Se connecter"); //TODO translate
+        GridPane.setVgrow(connectionButton, Priority.ALWAYS);
+        GridPane.setHgrow(connectionButton, Priority.ALWAYS);
+        GridPane.setValignment(connectionButton, VPos.CENTER);
+        GridPane.setHalignment(connectionButton, HPos.LEFT);
+        connectionButton.setTranslateX(37.5);
+        connectionButton.setTranslateY(80);
+        connectionButton.setMinWidth(325);
+        connectionButton.setMinHeight(50);
+        connectionButton.setStyle("-fx-background-color: #007dbe; -fx-border-radius: 0px; -fx-background-insets: 0; -fx-font-size: 14px; -fx-text-fill: #fff;");
+        connectionButton.setCursor(Cursor.HAND);
+        connectionButton.setOnMouseEntered(e -> connectionButton.setStyle("-fx-background-color: #0079b7; -fx-border-radius: 0px; -fx-background-insets: 0; -fx-font-size: 14px; -fx-text-fill: #fff;"));
+        connectionButton.setOnMouseExited(e -> connectionButton.setStyle("-fx-background-color: #007dbe; -fx-border-radius: 0px; -fx-background-insets: 0; -fx-font-size: 14px; -fx-text-fill: #fff;"));
+        connectionButton.setOnMouseClicked(this::login);
+        this.checkFieldContent();
+
+        this.mainPanel.getChildren().addAll(rememberPassword, connectionButton);
     }
 
     private void initMainTitle() {
@@ -102,7 +152,7 @@ public class PanelLogin extends Panel {
         email.setTranslateY(110);
         email.setTranslateX(37.5);
 
-        TextField emailField = new TextField();
+        emailField = new TextField(AxiumLauncher.getConfigManager().getProperty(Config.EMAIL).replace("null", ""));
         GridPane.setVgrow(emailField, Priority.ALWAYS);
         GridPane.setHgrow(emailField, Priority.ALWAYS);
         GridPane.setValignment(emailField, VPos.TOP);
@@ -112,6 +162,10 @@ public class PanelLogin extends Panel {
         emailField.setMaxHeight(40);
         emailField.setTranslateX(37.5);
         emailField.setTranslateY(140);
+        emailField.textProperty().addListener(observable -> {
+            AxiumLauncher.getConfigManager().setProperty(Config.EMAIL, emailField.getText());
+            this.checkFieldContent();
+        });
 
         Separator emailSeparator = new Separator();
         GridPane.setVgrow(emailSeparator, Priority.ALWAYS);
@@ -137,16 +191,29 @@ public class PanelLogin extends Panel {
         password.setTranslateY(200);
         password.setTranslateX(37.5);
 
-        PasswordField passwordField = new PasswordField();
+        passwordField = new ShowablePasswordField();
         GridPane.setVgrow(passwordField, Priority.ALWAYS);
         GridPane.setHgrow(passwordField, Priority.ALWAYS);
         GridPane.setValignment(passwordField, VPos.TOP);
         GridPane.setHalignment(passwordField, HPos.LEFT);
+        passwordField.passwordField.setText(Boolean.valueOf(AxiumLauncher.getConfigManager().getProperty(Config.REMEMBER_PASSWORD)) ? MdpUtils.decrypt(AxiumLauncher.getConfigManager().getProperty(Config.PASSWORD)) : "");
         passwordField.setStyle("-fx-background-color: #1e1e1e; -fx-font-size: 16px; -fx-text-fill: #e5e5e5");
+        passwordField.passwordField.setStyle("-fx-background-color: #1e1e1e; -fx-font-size: 16px; -fx-text-fill: #e5e5e5");
+        passwordField.textField.setStyle("-fx-background-color: #1e1e1e; -fx-font-size: 16px; -fx-text-fill: #e5e5e5");
         passwordField.setMaxWidth(325);
         passwordField.setMaxHeight(40);
         passwordField.setTranslateX(37.5);
         passwordField.setTranslateY(230);
+        passwordField.passwordField.textProperty().addListener(observable -> {
+            if (Boolean.valueOf(AxiumLauncher.getConfigManager().getProperty(Config.REMEMBER_PASSWORD))) {
+                AxiumLauncher.getConfigManager().setProperty(Config.PASSWORD, MdpUtils.encrypt(passwordField.passwordField.getText()));
+            } else {
+                AxiumLauncher.getConfigManager().setProperty(Config.PASSWORD, "");
+            }
+            AxiumLauncher.getConfigManager().setProperty(Config.EMAIL, emailField.getText());
+            this.checkFieldContent();
+        });
+
 
         Separator passwordSeparator = new Separator();
         GridPane.setVgrow(passwordSeparator, Priority.ALWAYS);
@@ -158,32 +225,7 @@ public class PanelLogin extends Panel {
         passwordSeparator.setMaxWidth(325);
         passwordSeparator.setStyle("-fx-background-color: #fff; -fx-opacity: 40%;");
 
-        CheckBox rememberPassword = new CheckBox(Lang.getText(this, "rememberPassword"));
-        GridPane.setVgrow(rememberPassword, Priority.ALWAYS);
-        GridPane.setHgrow(rememberPassword, Priority.ALWAYS);
-        GridPane.setValignment(rememberPassword, VPos.TOP);
-        GridPane.setHalignment(rememberPassword, HPos.LEFT);
-        rememberPassword.setStyle("-fx-font-size: 16px; -fx-text-fill: #e5e5e5");
-        rememberPassword.setTranslateX(37.5);
-        rememberPassword.setTranslateY(280);
-
-        Button connectionButton = new Button("Se connecter"); //TODO translate
-        GridPane.setVgrow(connectionButton, Priority.ALWAYS);
-        GridPane.setHgrow(connectionButton, Priority.ALWAYS);
-        GridPane.setValignment(connectionButton, VPos.CENTER);
-        GridPane.setHalignment(connectionButton, HPos.LEFT);
-        connectionButton.setTranslateX(37.5);
-        connectionButton.setTranslateY(80);
-        connectionButton.setMinWidth(325);
-        connectionButton.setMinHeight(50);
-        connectionButton.setStyle("-fx-background-color: #007dbe; -fx-border-radius: 0px; -fx-background-insets: 0; -fx-font-size: 14px; -fx-text-fill: #fff;");
-        connectionButton.setCursor(Cursor.HAND);
-        connectionButton.setOnMouseEntered(e -> connectionButton.setStyle("-fx-background-color: #0079b7; -fx-border-radius: 0px; -fx-background-insets: 0; -fx-font-size: 14px; -fx-text-fill: #fff;"));
-        connectionButton.setOnMouseExited(e -> connectionButton.setStyle("-fx-background-color: #007dbe; -fx-border-radius: 0px; -fx-background-insets: 0; -fx-font-size: 14px; -fx-text-fill: #fff;"));
-
-        connectionButton.setOnMouseClicked(e -> AxiumLauncher.getPanelManager().showPanel(new MinecraftPanel()));
-
-        mainPanel.getChildren().addAll(password, passwordField, passwordSeparator, rememberPassword, connectionButton);
+        mainPanel.getChildren().addAll(password, passwordField, passwordSeparator);
     }
 
     private void initBottom() {
@@ -210,6 +252,34 @@ public class PanelLogin extends Panel {
         GridPane.setHalignment(forgotPassword, HPos.CENTER);
 
         bottomPanel.getChildren().addAll(noAccount, registerHere, forgotPassword);
+    }
+
+    private void checkFieldContent() {
+
+        connectionButton.setDisable(!((emailField.getText() != null && emailField.getText() != "") && (passwordField.passwordField.getText() != null && passwordField.passwordField.getText() != "")));
+    }
+
+    private void login(MouseEvent event) {
+
+        /*if (tryLogin(emailField.getText(), passwordField.passwordField.getText())) {
+
+            AxiumLauncher.getConfigManager().setProperty(Config.EMAIL, emailField.getText());
+
+            boolean rememberPassword = Boolean.valueOf(AxiumLauncher.getConfigManager().getProperty(Config.REMEMBER_PASSWORD));
+            AxiumLauncher.getConfigManager().setProperty(Config.REMEMBER_PASSWORD, String.valueOf(rememberPassword));
+
+            if (rememberPassword) {
+
+                AxiumLauncher.getConfigManager().setProperty(Config.PASSWORD, MdpUtils.encrypt(passwordField.passwordField.getText()));
+            }
+        }*/
+
+        AxiumLauncher.getPanelManager().showPanel(AxiumLauncher.getPanelManager().getHomePanel());
+    }
+
+    private boolean tryLogin(String email, String password) {
+
+        return false;
     }
 
     @Override

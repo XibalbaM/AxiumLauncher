@@ -1,9 +1,8 @@
 package fr.xibalba.launcher.config;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import fr.xibalba.launcher.main.Main;
+
+import java.io.*;
 import java.util.Properties;
 
 public class ConfigManager {
@@ -15,7 +14,10 @@ public class ConfigManager {
         props = new Properties();
         InputStream fis = null;
         try {
-            fis = getClass().getClassLoader().getResourceAsStream(config);
+            File file = new File(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile() + "/" + config);
+            if (!(file.exists() || file.isDirectory()))
+                file.createNewFile();
+            fis = new FileInputStream(file);
             props.load(fis);
         } catch (IOException e) {
             e.printStackTrace();
@@ -24,7 +26,7 @@ public class ConfigManager {
 
     public void save() {
         try {
-            props.store(new FileOutputStream(getClass().getClassLoader().getResource(config).getFile()), "Config file");
+            props.store(new FileOutputStream(new File(Main.class.getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile() + "/" + config), "Config file");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

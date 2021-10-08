@@ -1,6 +1,5 @@
 package fr.xibalba.launcher.ui.panels;
 
-import fr.xibalba.launcher.ui.PanelManager;
 import fr.xibalba.launcher.ui.panel.Panel;
 import fr.xibalba.utils.minecraft.MinecraftConnection;
 import fr.xibalba.utils.minecraft.MinecraftConnector;
@@ -19,9 +18,9 @@ public class MinecraftPanel extends Panel {
     private final MinecraftConnector connector = new MinecraftConnector();
 
     @Override
-    public void init(PanelManager panelManager) {
+    public void init() {
 
-        super.init(panelManager);
+        super.init();
 
         initMain();
         showConnectionPane();

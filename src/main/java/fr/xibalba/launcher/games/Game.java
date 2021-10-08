@@ -1,75 +1,70 @@
 package fr.xibalba.launcher.games;
 
 import fr.xibalba.utils.Function;
-import fr.xibalba.utils.javaFX.Showable;
-import fr.xibalba.utils.song.Song;
-
-import java.util.List;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.image.Image;
 
 public class Game {
 
     private String name;
     private String description;
-    private List<Showable> display;
-    private Song sound;
+    private BooleanProperty isDownloaded;
+    private Image icon;
     private Function<Game> onShow;
     private Function<Game> onHide;
+    private String url;
+    private String[] keyword;
 
-    public Game(String name, String description, List<Showable> display, Song sound, Function<Game> onShow, Function<Game> onHide) {
+    public Game(String name, String description, boolean isDownloaded, Image icon, Function<Game> onShow, Function<Game> onHide, String url, String... keyword) {
 
         this.name = name;
         this.description = description;
-        this.display = display;
-        this.sound = sound;
+        this.isDownloaded = new SimpleBooleanProperty(isDownloaded);
+        this.icon = icon;
         this.onShow = onShow;
         this.onHide = onHide;
+        this.url = url;
+        this.keyword = keyword;
     }
 
     public String getName() {
+
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getDescription() {
+
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public BooleanProperty isDownloadedProperty() {
+
+        return isDownloaded;
     }
 
-    public List<Showable> getDisplay() {
-        return display;
-    }
+    public Image getIcon() {
 
-    public void setDisplay(List<Showable> display) {
-        this.display = display;
-    }
-
-    public Song getSound() {
-        return sound;
-    }
-
-    public void setSound(Song sound) {
-        this.sound = sound;
+        return icon;
     }
 
     public Function<Game> getOnShow() {
+
         return onShow;
     }
 
-    public void setOnShow(Function<Game> onShow) {
-        this.onShow = onShow;
-    }
-
     public Function<Game> getOnHide() {
+
         return onHide;
     }
 
-    public void setOnHide(Function<Game> onHide) {
-        this.onHide = onHide;
+    public String getUrl() {
+
+        return url;
+    }
+
+    public String[] getKeyword() {
+
+        return keyword;
     }
 }

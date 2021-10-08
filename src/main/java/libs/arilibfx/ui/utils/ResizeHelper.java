@@ -1,5 +1,6 @@
 package libs.arilibfx.ui.utils;
 
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -35,8 +36,20 @@ public class ResizeHelper {
         resizeListener.setMaxWidth(maxWidth);
         resizeListener.setMaxHeight(maxHeight);
 
+        children(stage.getScene().getRoot().getChildrenUnmodifiable(), resizeListener);
 
-        ObservableList<Node> children = stage.getScene().getRoot().getChildrenUnmodifiable();
+        stage.getScene().getRoot().getChildrenUnmodifiable().addListener(new ListChangeListener<Node>() {
+
+            @Override
+            public void onChanged(Change<? extends Node> c) {
+
+                children(stage.getScene().getRoot().getChildrenUnmodifiable(), resizeListener);
+            }
+        });
+    }
+
+    private static void children(ObservableList<Node> children, ResizeListener resizeListener) {
+
         for (Node child : children) {
             if (child instanceof ScrollBar) {
                 isScrollbar = true;

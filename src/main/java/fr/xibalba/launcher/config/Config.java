@@ -1,5 +1,5 @@
 package fr.xibalba.launcher.config;
 
 public enum Config {
-    LANGUAGE, EMAIL
+    LANGUAGE, REMEMBER_PASSWORD, EMAIL, PASSWORD
 }

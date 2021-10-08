@@ -1,11 +1,10 @@
 package fr.xibalba.launcher.ui;
 
-import fr.xibalba.launcher.ui.panel.Panel;
-import libs.arilibfx.AriLibFX;
-import libs.arilibfx.ui.utils.ResizeHelper;
 import fr.xibalba.launcher.main.AxiumLauncher;
 import fr.xibalba.launcher.main.Const;
-import fr.xibalba.launcher.ui.panel.IPanel;
+import fr.xibalba.launcher.ui.panel.Panel;
+import fr.xibalba.launcher.ui.panels.HomePanel;
+import fr.xibalba.launcher.ui.panels.PanelLogin;
 import fr.xibalba.launcher.ui.panels.includes.TopPanel;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
@@ -15,6 +14,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import libs.arilibfx.AriLibFX;
+import libs.arilibfx.ui.utils.ResizeHelper;
 
 public class PanelManager {
 
@@ -23,7 +24,10 @@ public class PanelManager {
     private GridPane layout;
     private TopPanel topPanel = new TopPanel();
     private GridPane centerPanel = new GridPane();
-    private IPanel currentPanel;
+    private Panel currentPanel;
+
+    private final PanelLogin panelLogin = new PanelLogin();
+    private final HomePanel homePanel = new HomePanel();
 
     public PanelManager(AxiumLauncher axiumLauncher, Stage stage) {
 
@@ -55,7 +59,7 @@ public class PanelManager {
         topPanelConstraints.setMaxHeight(25);
         this.layout.getRowConstraints().addAll(topPanelConstraints, new RowConstraints());
         this.layout.add(this.topPanel.getLayout(), 0, 0);
-        this.topPanel.init(this);
+        this.topPanel.init();
 
         this.layout.add(this.centerPanel, 0, 1);
         GridPane.setVgrow(this.centerPanel, Priority.ALWAYS);
@@ -63,19 +67,19 @@ public class PanelManager {
         ResizeHelper.addResizeListener(this.stage);
     }
 
-    public void showPanel(IPanel panel) {
+    public void showPanel(Panel panel) {
 
         this.currentPanel.onHide();
         this.centerPanel.getChildren().clear();
-        this.centerPanel.getChildren().add(panel.getLayout());
+        this.centerPanel.getChildren().addAll(panel.getLayout());
         this.currentPanel = panel;
-        panel.init(this);
+        panel.init();
         panel.onShow();
     }
 
-    public void updatePanel() {
+    public void update() {
 
-        IPanel panel = null;
+        Panel panel = null;
         try {
             panel = this.currentPanel.getClass().newInstance();
         } catch (InstantiationException e) {
@@ -86,14 +90,14 @@ public class PanelManager {
         this.centerPanel.getChildren().clear();
         this.centerPanel.getChildren().add(panel.getLayout());
         this.currentPanel = panel;
-        panel.init(this);
-        panel.onShow();
+        panel.init();
+        panel.onRefresh();
     }
 
     public void updateTopBar() {
         this.layout.getChildren().remove(topPanel);
         this.topPanel = new TopPanel();
-        this.topPanel.init(this);
+        this.topPanel.init();
         this.layout.add(topPanel.getLayout(), 0, 0);
     }
 
@@ -109,7 +113,22 @@ public class PanelManager {
         return topPanel;
     }
 
-    public IPanel getCurrentPanel() {
+    public Panel getCurrentPanel() {
         return currentPanel;
+    }
+
+    public PanelLogin getPanelLogin() {
+
+        return panelLogin;
+    }
+
+    public HomePanel getHomePanel() {
+
+        return homePanel;
+    }
+
+    public GridPane getLayout() {
+
+        return layout;
     }
 }

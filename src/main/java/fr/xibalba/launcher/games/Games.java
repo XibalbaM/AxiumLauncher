@@ -1,20 +1,14 @@
 package fr.xibalba.launcher.games;
 
-import fr.xibalba.launcher.main.Const;
 import fr.xibalba.launcher.lang.Lang;
-import fr.xibalba.utils.Function;
-import fr.xibalba.utils.song.Song;
+import javafx.scene.image.Image;
 
 import static fr.xibalba.launcher.games.GamesRegistry.register;
 
 public class Games {
 
-    private String fileName = "games";
-    private Function<Game> defaultOnShow = game -> game.getSound().play();
-    private Function<Game> defaultOnHide = game -> game.getSound().stopPlay();
+    private static String fileName = "games";
 
-    public void init() {
-
-        Game worldLegends = register(new Game("World Legends", Lang.getText(fileName, "worldLegends.description"), null, new Song(Const.CLASS_LOADER.getResource("fr/xibalba/launcher/ui/panels/assets/main.wav").getFile()), defaultOnShow, defaultOnHide));
-    }
+    public static Game worldLegends = register(new Game("World Legends", Lang.getText(fileName, "worldLegends.description"), false, new Image("https://www.dropbox.com/s/k8kba15p514uopq/W.png?dl=1"), param -> {}, param -> {}, "https://www.dropbox.com/s/k8kba15p514uopq/W.png?dl=1", "Salut", "hey", "axium"));
+    public static Game test = register(new Game("Test", Lang.getText(fileName, "worldLegends.description"), true, null, param -> {}, param -> {}, "", "Salut", "hey", "axium"));
 }
