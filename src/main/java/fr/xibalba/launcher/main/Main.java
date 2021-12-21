@@ -18,11 +18,6 @@ public class Main {
 
         if (args.length > 0 && Arrays.stream(args).anyMatch("--boot"::equalsIgnoreCase)) {
 
-            System.out.println("Booting");
-
-            Boot.boot();
-        } else {
-
             try {
                 Class.forName("javafx.application.Application");
                 Application.launch(FxApplication.class, args);
@@ -30,6 +25,12 @@ public class Main {
                 logger.error("JavaFx not found :cry:");
                 JOptionPane.showMessageDialog(null, "Une erreur avec java à été détectée.\n" + e.getMessage() + " Not found", "Erreur Java", JOptionPane.ERROR_MESSAGE);
             }
+
+        } else {
+
+            System.out.println("Booting");
+
+            Boot.boot();
         }
     }
 }

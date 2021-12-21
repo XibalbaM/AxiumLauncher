@@ -1,6 +1,6 @@
 package fr.xibalba.launcher.ui.panels;
 
-import fr.xibalba.launcher.config.Config;
+import fr.xibalba.launcher.config.ConfigManager;
 import fr.xibalba.launcher.lang.Lang;
 import fr.xibalba.launcher.main.AxiumLauncher;
 import fr.xibalba.launcher.ui.panel.Panel;
@@ -31,9 +31,9 @@ public class PanelLogin extends Panel {
 
         super.init();
 
-        if (Boolean.valueOf(AxiumLauncher.getConfigManager().getProperty(Config.REMEMBER_PASSWORD))) {
-            if (AxiumLauncher.getConfigManager().getProperty(Config.EMAIL) != null && AxiumLauncher.getConfigManager().getProperty(Config.EMAIL) != "" && AxiumLauncher.getConfigManager().getProperty(Config.PASSWORD) != null && AxiumLauncher.getConfigManager().getProperty(Config.PASSWORD) != "") {
-                if (tryLogin(AxiumLauncher.getConfigManager().getProperty(Config.EMAIL), MdpUtils.decrypt(AxiumLauncher.getConfigManager().getProperty(Config.PASSWORD)))) {
+        if (Boolean.valueOf(ConfigManager.CONFIG.rememberPassword)) {
+            if (ConfigManager.CONFIG.email != "" && ConfigManager.CONFIG.mdp != "") {
+                if (tryLogin(ConfigManager.CONFIG.email, MdpUtils.decrypt(ConfigManager.CONFIG.mdp))) {
                     AxiumLauncher.getPanelManager().showPanel(AxiumLauncher.getPanelManager().getHomePanel());
                 }
             }
@@ -85,17 +85,17 @@ public class PanelLogin extends Panel {
         GridPane.setHgrow(rememberPassword, Priority.ALWAYS);
         GridPane.setValignment(rememberPassword, VPos.TOP);
         GridPane.setHalignment(rememberPassword, HPos.LEFT);
-        rememberPassword.setSelected(Boolean.valueOf(AxiumLauncher.getConfigManager().getProperty(Config.REMEMBER_PASSWORD)));
+        rememberPassword.setSelected(ConfigManager.CONFIG.rememberPassword);
         rememberPassword.setStyle("-fx-font-size: 16px; -fx-text-fill: #e5e5e5");
         rememberPassword.setTranslateX(37.5);
         rememberPassword.setTranslateY(280);
         rememberPassword.selectedProperty().addListener(observable -> {
-            AxiumLauncher.getConfigManager().setProperty(Config.REMEMBER_PASSWORD, String.valueOf(rememberPassword.isSelected()));
+            ConfigManager.CONFIG.rememberPassword = rememberPassword.isSelected();
 
             if (rememberPassword.isSelected()) {
-                AxiumLauncher.getConfigManager().setProperty(Config.PASSWORD, MdpUtils.encrypt(passwordField.passwordField.getText()));
+                ConfigManager.CONFIG.mdp = MdpUtils.encrypt(passwordField.passwordField.getText());
             } else {
-                AxiumLauncher.getConfigManager().setProperty(Config.PASSWORD, "");
+                ConfigManager.CONFIG.mdp = "";
             }
         });
 
@@ -152,7 +152,7 @@ public class PanelLogin extends Panel {
         email.setTranslateY(110);
         email.setTranslateX(37.5);
 
-        emailField = new TextField(AxiumLauncher.getConfigManager().getProperty(Config.EMAIL).replace("null", ""));
+        emailField = new TextField(ConfigManager.CONFIG.email);
         GridPane.setVgrow(emailField, Priority.ALWAYS);
         GridPane.setHgrow(emailField, Priority.ALWAYS);
         GridPane.setValignment(emailField, VPos.TOP);
@@ -163,7 +163,7 @@ public class PanelLogin extends Panel {
         emailField.setTranslateX(37.5);
         emailField.setTranslateY(140);
         emailField.textProperty().addListener(observable -> {
-            AxiumLauncher.getConfigManager().setProperty(Config.EMAIL, emailField.getText());
+            ConfigManager.CONFIG.email = emailField.getText();
             this.checkFieldContent();
         });
 
@@ -196,7 +196,7 @@ public class PanelLogin extends Panel {
         GridPane.setHgrow(passwordField, Priority.ALWAYS);
         GridPane.setValignment(passwordField, VPos.TOP);
         GridPane.setHalignment(passwordField, HPos.LEFT);
-        passwordField.passwordField.setText(Boolean.valueOf(AxiumLauncher.getConfigManager().getProperty(Config.REMEMBER_PASSWORD)) ? MdpUtils.decrypt(AxiumLauncher.getConfigManager().getProperty(Config.PASSWORD)) : "");
+        passwordField.passwordField.setText(ConfigManager.CONFIG.rememberPassword ? MdpUtils.decrypt(ConfigManager.CONFIG.mdp) : "");
         passwordField.setStyle("-fx-background-color: #1e1e1e; -fx-font-size: 16px; -fx-text-fill: #e5e5e5");
         passwordField.passwordField.setStyle("-fx-background-color: #1e1e1e; -fx-font-size: 16px; -fx-text-fill: #e5e5e5");
         passwordField.textField.setStyle("-fx-background-color: #1e1e1e; -fx-font-size: 16px; -fx-text-fill: #e5e5e5");
@@ -205,15 +205,14 @@ public class PanelLogin extends Panel {
         passwordField.setTranslateX(37.5);
         passwordField.setTranslateY(230);
         passwordField.passwordField.textProperty().addListener(observable -> {
-            if (Boolean.valueOf(AxiumLauncher.getConfigManager().getProperty(Config.REMEMBER_PASSWORD))) {
-                AxiumLauncher.getConfigManager().setProperty(Config.PASSWORD, MdpUtils.encrypt(passwordField.passwordField.getText()));
-            } else {
-                AxiumLauncher.getConfigManager().setProperty(Config.PASSWORD, "");
-            }
-            AxiumLauncher.getConfigManager().setProperty(Config.EMAIL, emailField.getText());
+            if (Boolean.valueOf(ConfigManager.CONFIG.rememberPassword))
+                ConfigManager.CONFIG.mdp = MdpUtils.encrypt(passwordField.passwordField.getText());
+            else
+                ConfigManager.CONFIG.mdp = "";
+
+            ConfigManager.CONFIG.email = emailField.getText();
             this.checkFieldContent();
         });
-
 
         Separator passwordSeparator = new Separator();
         GridPane.setVgrow(passwordSeparator, Priority.ALWAYS);

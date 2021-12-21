@@ -1,70 +1,72 @@
 package fr.xibalba.launcher.main;
 
-import fr.xibalba.launcher.config.Config;
 import fr.xibalba.launcher.config.ConfigManager;
-import fr.xibalba.launcher.database.DatabaseManager;
-import fr.xibalba.launcher.games.Games;
+import fr.xibalba.launcher.games.Game;
 import fr.xibalba.launcher.ui.PanelManager;
+import fr.xibalba.launcher.ui.panels.PanelLang;
+import fr.xibalba.launcher.ui.panels.includes.GamePanel;
 import javafx.stage.Stage;
 import libs.arilibfx.utils.AriLogger;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.Locale;
 
 public class AxiumLauncher {
 
     private static PanelManager panelManager;
-    private static ConfigManager configManager;
-    private static DatabaseManager databaseManager;
-    static AriLogger logger = new AriLogger("Axium Launcher");
+    public static AriLogger logger = new AriLogger("Axium Launcher");
 
-    public void init(Stage stage) {
+    public static void init(Stage stage) {
 
-        databaseManager = new DatabaseManager();
-        databaseManager.init();
-        configManager = new ConfigManager();
+        ConfigManager.load();
 
-        new Games();
-
-        panelManager = new PanelManager(this, stage);
+        panelManager = new PanelManager(stage);
         panelManager.init();
-        //panelManager.showPanel(new PanelLang());
-        panelManager.showPanel(panelManager.getHomePanel());
+        panelManager.showPanel(new PanelLang());
+        //panelManager.showPanel(panelManager.getHomePanel());
+    }
+
+    public static void launchGame(GamePanel gamePanel) throws Exception { //TODO use libs.arilibfx.updater.Updater
+
+        Game game = gamePanel.getGame();
+
+        //String s = new URL(game.getDownloadUrl()).getFile().substring(new URL(game.getDownloadUrl()).getFile().lastIndexOf('/'), new URL(game.getDownloadUrl()).getFile().length() - 5);
+        File file = new File(ConfigManager.CONFIG.gameConfigs.get(game.getName()).path);
+
+        /*if (!file.getParentFile().exists())
+            file.getParentFile().mkdirs();
+        if (!file.exists())
+            file.createNewFile();*/
+
+        new Thread(() -> {
+            gamePanel.onDownloadJobStarted();
+            try {
+                FileUtils.copyURLToFile(new URL(game.getUrl()), file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            gamePanel.onDownloadJobFinished();
+        }).start();
     }
 
     public static void stopApp() {
-        configManager.save();
+        ConfigManager.save();
         System.exit(0);
-    }
-
-    public static Locale getAppLocale() {
-
-        Locale result;
-        if (configManager.getProperty(Config.LANGUAGE) == null) {
-            return Locale.getDefault();
-        }
-
-        switch (configManager.getProperty(Config.LANGUAGE)) {
-
-            case "fr" : result = Locale.FRENCH; break;
-            case "en" : result = Locale.ENGLISH; break;
-            default : result = Locale.getDefault(); break;
-        }
-        return result;
-    }
-
-    public static ConfigManager getConfigManager() {
-        return configManager;
     }
 
     public static PanelManager getPanelManager() {
         return panelManager;
     }
 
-    public static DatabaseManager getDatabaseManager() {
-        return databaseManager;
-    }
-
     public static AriLogger getLogger() {
         return logger;
+    }
+
+    public static Locale currentLocal() {
+
+        return ConfigManager.CONFIG.language;
     }
 }

@@ -1,6 +1,6 @@
 package fr.xibalba.launcher.games;
 
-import fr.xibalba.utils.Function;
+import fr.xibalba.utils.annotations.BuilderProperty;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.image.Image;
@@ -10,29 +10,31 @@ public class Game {
     private String name;
     private String description;
     private BooleanProperty isDownloaded;
+    private String downloadUrl;
+    private String defaultPath;
     private Image icon;
-    private Function<Game> onShow;
-    private Function<Game> onHide;
     private String url;
     private String[] keyword;
 
-    public Game(String name, String description, boolean isDownloaded, Image icon, Function<Game> onShow, Function<Game> onHide, String url, String... keyword) {
+    public Game(String name, String description, boolean isDownloaded, String downloadUrl, String defaultPath, Image icon, String url, String... keyword) {
 
         this.name = name;
         this.description = description;
         this.isDownloaded = new SimpleBooleanProperty(isDownloaded);
+        this.downloadUrl = downloadUrl;
+        this.defaultPath = defaultPath;
         this.icon = icon;
-        this.onShow = onShow;
-        this.onHide = onHide;
         this.url = url;
         this.keyword = keyword;
     }
 
+    @BuilderProperty
     public String getName() {
 
         return name;
     }
 
+    @BuilderProperty
     public String getDescription() {
 
         return description;
@@ -48,14 +50,14 @@ public class Game {
         return icon;
     }
 
-    public Function<Game> getOnShow() {
+    public String getDownloadUrl() {
 
-        return onShow;
+        return downloadUrl;
     }
 
-    public Function<Game> getOnHide() {
+    public String getDefaultPath() {
 
-        return onHide;
+        return defaultPath;
     }
 
     public String getUrl() {

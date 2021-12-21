@@ -2,7 +2,7 @@ package fr.xibalba.launcher.ui.panels.includes;
 
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
-import fr.xibalba.launcher.config.Config;
+import fr.xibalba.launcher.config.ConfigManager;
 import fr.xibalba.launcher.lang.Lang;
 import fr.xibalba.launcher.main.AxiumLauncher;
 import fr.xibalba.launcher.main.Const;
@@ -17,6 +17,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+
+import java.util.Locale;
 
 public class TopPanel extends Panel {
 
@@ -68,9 +70,7 @@ public class TopPanel extends Panel {
         Menu axium = new Menu("Axium");
 
         MenuItem params = new MenuItem(Lang.getText(this, "params"));
-        //params.setOnAction(event -> AxiumLauncher.getPanelManager().showPopup(new PopupSettings()));
         params.setOnAction(event -> {
-            System.out.println("hi");
             new PopupSettings();
         });
 
@@ -97,26 +97,26 @@ public class TopPanel extends Panel {
         menuBar.getMenus().add(games);
     }
 
-    private void initHelpMenu() {
+    private void initHelpMenu() {//TODO TRAD all here
         Menu help = new Menu(Lang.getText(this, "menu.help"));
-        Menu language = new Menu("Language");//TODO TRAD all here
+        Menu language = new Menu("Language");
 
         ToggleGroup group = new ToggleGroup();
         MenuItem l_default = new MenuItem("DEFAULT");
         l_default.setOnAction(event -> {
-            AxiumLauncher.getConfigManager().setProperty(Config.LANGUAGE, "en");
+            ConfigManager.CONFIG.language = Locale.ENGLISH;
             AxiumLauncher.getPanelManager().updateTopBar();
             AxiumLauncher.getPanelManager().update();
         });
         MenuItem l_english = new MenuItem("ENGLISH");
         l_english.setOnAction(event -> {
-            AxiumLauncher.getConfigManager().setProperty(Config.LANGUAGE, "en");
+            ConfigManager.CONFIG.language = Locale.ENGLISH;
             AxiumLauncher.getPanelManager().updateTopBar();
             AxiumLauncher.getPanelManager().update();
         });
         MenuItem l_french = new MenuItem("FRANCAIS");
         l_french.setOnAction(event -> {
-            AxiumLauncher.getConfigManager().setProperty(Config.LANGUAGE, "fr");
+            ConfigManager.CONFIG.language = Locale.FRANCE;
             AxiumLauncher.getPanelManager().updateTopBar();
             AxiumLauncher.getPanelManager().update();
         });

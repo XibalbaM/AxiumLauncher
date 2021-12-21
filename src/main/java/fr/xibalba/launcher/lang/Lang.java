@@ -1,8 +1,9 @@
 package fr.xibalba.launcher.lang;
 
+import fr.xibalba.launcher.config.ConfigManager;
 import fr.xibalba.launcher.main.AxiumLauncher;
-import fr.xibalba.launcher.main.Const;
 import fr.xibalba.launcher.ui.panel.Panel;
+import fr.xibalba.utils.StringUtils;
 
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -12,35 +13,38 @@ public class Lang {
 
     public static String getText(Panel panel, String field, Locale locale) {
 
-        try {
-            ResourceBundle bundle = ResourceBundle.getBundle("lang/" + panel.getName(), locale, Const.CLASS_LOADER);
-            return bundle.getString(field);
-        } catch (MissingResourceException e) {
-            if (locale != AxiumLauncher.getAppLocale())
-                return getText(panel, field);
-            else
-                return field;
-        }
+        return getText(panel.getName(), field, locale);
     }
 
     public static String getText(Panel panel, String field) {
-        return getText(panel, field, AxiumLauncher.getAppLocale());
+
+        return getText(panel, field, AxiumLauncher.currentLocal());
+    }
+
+    public static String getText(String fileName, String field) {
+        return getText(fileName, field, AxiumLauncher.currentLocal());
     }
 
     public static String getText(String fileName, String field, Locale locale) {
 
         try {
-            ResourceBundle bundle = ResourceBundle.getBundle("lang/" + fileName, locale, Const.CLASS_LOADER);
+
+            ResourceBundle bundle = ResourceBundle.getBundle("lang/" + fileName, locale);
             return bundle.getString(field);
         } catch (MissingResourceException e) {
-            if (locale != AxiumLauncher.getAppLocale())
-                return getText(fileName, field);
-            else
-                return field;
-        }
-    }
 
-    public static String getText(String fileName, String field) {
-        return getText(fileName, field, AxiumLauncher.getAppLocale());
+            if (!locale.getDisplayLanguage().equals(Locale.ENGLISH.getDisplayLanguage()) && ConfigManager.CONFIG.autoTranslate) {
+
+                String translated = StringUtils.translate(getText(fileName, field, Locale.ENGLISH), locale);
+
+                if (!StringUtils.isEmpty(translated))
+                    return translated;
+            } else if (!locale.getDisplayLanguage().equals(Locale.ENGLISH.getDisplayLanguage())) {
+
+                return getText(fileName, field, Locale.ENGLISH);
+            }
+
+            return field;
+        }
     }
 }

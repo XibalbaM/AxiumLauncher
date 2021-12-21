@@ -26,7 +26,7 @@ public class DownloadTask {
         this.hashServer = hashServer;
     }
 
-    public String download()throws IOException{
+    public String download() throws IOException{
         String hashLocal = null;
         nunAttempts++;
         destination.getParentFile().mkdirs();

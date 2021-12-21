@@ -1,6 +1,6 @@
 package fr.xibalba.launcher.ui.panels;
 
-import fr.xibalba.launcher.config.Config;
+import fr.xibalba.launcher.config.ConfigManager;
 import fr.xibalba.launcher.main.AxiumLauncher;
 import fr.xibalba.launcher.ui.panel.Panel;
 import javafx.beans.value.ChangeListener;
@@ -15,10 +15,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
+import java.util.Locale;
+
 public class PanelLang extends Panel {
 
     private final GridPane pane = new GridPane();
-    private String language = "en";
+    private Locale language = Locale.ENGLISH;
 
     @Override
     public void init() {
@@ -67,8 +69,8 @@ public class PanelLang extends Panel {
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 
                 switch (newValue) {
-                    case "FRANCAIS" : language = "fr"; break;
-                    default : language = "en"; break;
+                    case "FRANCAIS" : language = Locale.FRANCE; break;
+                    default : language = Locale.ENGLISH; break;
                 }
             }
         });
@@ -80,7 +82,7 @@ public class PanelLang extends Panel {
         GridPane.setHalignment(button, HPos.CENTER);
         button.setTranslateY(-100);
         button.setOnMouseClicked(event -> {
-            AxiumLauncher.getConfigManager().setProperty(Config.LANGUAGE, language);
+            ConfigManager.CONFIG.language = language;
             AxiumLauncher.getPanelManager().showPanel(AxiumLauncher.getPanelManager().getPanelLogin());
             AxiumLauncher.getPanelManager().updateTopBar();
         });

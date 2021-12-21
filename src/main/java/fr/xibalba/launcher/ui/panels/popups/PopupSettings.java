@@ -13,7 +13,7 @@ public class PopupSettings extends PopupPanel {
 
     public PopupSettings() {
 
-        super(500, 700);
+        super(500, 650);
         Pane pane = new Pane();
         pane.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         this.centerPanel.getChildren().add(pane);

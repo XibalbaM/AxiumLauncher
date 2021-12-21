@@ -1,6 +1,5 @@
 package fr.xibalba.launcher.ui.panels.includes;
 
-import fr.xibalba.launcher.games.Game;
 import fr.xibalba.launcher.games.GamesRegistry;
 import fr.xibalba.launcher.ui.panel.Panel;
 import fr.xibalba.utils.javaFX.GameButton;
@@ -26,11 +25,18 @@ public class LeftPanel extends Panel {
         GridPane.setVgrow(vBox, Priority.ALWAYS);
         GridPane.setHgrow(vBox, Priority.ALWAYS);
         vBox.setSpacing(5.0D);
-        for (Game instance : GamesRegistry.getGameList()){
-            GameButton button = new GameButton(instance);
-            gameButtons.add(button);
-            vBox.getChildren().add(button);
-        }
+        GamesRegistry.getInstance().getGameList().forEach((s, game) -> {
+            GameButton button = new GameButton(game);
+            if (s == GamesRegistry.getInstance().worldLegends.getName()) {
+
+                gameButtons.add(0, button);
+                vBox.getChildren().add(0, button);
+            } else {
+
+                gameButtons.add(button);
+                vBox.getChildren().add(button);
+            }
+        });
         vBox.setTranslateY(10);
 
         Separator separator = new Separator();

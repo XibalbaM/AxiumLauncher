@@ -19,7 +19,6 @@ import libs.arilibfx.ui.utils.ResizeHelper;
 
 public class PanelManager {
 
-    private final AxiumLauncher axiumLauncher;
     private final Stage stage;
     private GridPane layout;
     private TopPanel topPanel = new TopPanel();
@@ -29,9 +28,8 @@ public class PanelManager {
     private final PanelLogin panelLogin = new PanelLogin();
     private final HomePanel homePanel = new HomePanel();
 
-    public PanelManager(AxiumLauncher axiumLauncher, Stage stage) {
+    public PanelManager(Stage stage) {
 
-        this.axiumLauncher = axiumLauncher;
         this.stage = stage;
     }
 
@@ -44,6 +42,7 @@ public class PanelManager {
         this.stage.setWidth(1280);
         this.stage.setMinHeight(720);
         this.stage.setHeight(720);
+        this.stage.setOnCloseRequest(event -> AxiumLauncher.stopApp());
         this.stage.initStyle(StageStyle.UNDECORATED);
         this.stage.centerOnScreen();
         this.stage.show();
@@ -95,6 +94,7 @@ public class PanelManager {
     }
 
     public void updateTopBar() {
+
         this.layout.getChildren().remove(topPanel);
         this.topPanel = new TopPanel();
         this.topPanel.init();
@@ -103,10 +103,6 @@ public class PanelManager {
 
     public Stage getStage() {
         return stage;
-    }
-
-    public AxiumLauncher getAxiumLauncher() {
-        return axiumLauncher;
     }
 
     public TopPanel getTopPanel() {

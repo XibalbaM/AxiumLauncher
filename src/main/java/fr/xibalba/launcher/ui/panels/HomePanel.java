@@ -33,7 +33,7 @@ public class HomePanel extends Panel {
         GridPane.setHgrow(centerPanel, Priority.ALWAYS);
         GridPane.setVgrow(centerPanel, Priority.ALWAYS);
 
-        this.showGamePanel(new GamePanel(GamesRegistry.getGameList().get(0)));
+        this.showGamePanel(new GamePanel(GamesRegistry.getInstance().worldLegends));
     }
 
     public void showGamePanel(GamePanel instance) {

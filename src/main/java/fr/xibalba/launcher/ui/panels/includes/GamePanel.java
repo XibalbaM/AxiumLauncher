@@ -26,14 +26,17 @@ import libs.arilibfx.ui.component.AProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class GamePanel extends Panel {
 
     private final Game game;
+    private AProgressBar dlBar;
 
     public GamePanel(Game game) {
-        this.game = game;
 
+        Objects.requireNonNull(game);
+        this.game = game;
     }
 
     @Override
@@ -131,7 +134,13 @@ public class GamePanel extends Panel {
         installButton.translateXProperty().bind(AxiumLauncher.getPanelManager().getStage().widthProperty().subtract(300).divide(2).subtract(installButton.widthProperty().divide(2)));
         installButton.setTranslateY(-90);
         installButton.setPrefSize(140, 40);
-        installButton.setOnMouseClicked(event -> System.out.println("DOWNLOAD"));
+        installButton.setOnMouseClicked(event -> {
+            try {
+                AxiumLauncher.launchGame(this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
 
         Button settingsButton = new Button();
         GridPane.setVgrow(settingsButton, Priority.ALWAYS);
@@ -154,7 +163,7 @@ public class GamePanel extends Panel {
         settingsButton.setOnMouseExited(event -> settingsButton.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, new CornerRadii(5), Insets.EMPTY))));
         settingsButton.setOnMouseClicked(event -> game.isDownloadedProperty().setValue(!game.isDownloadedProperty().getValue()));
 
-        AProgressBar dlBar = new AProgressBar(800, 35);
+        dlBar = new AProgressBar(800, 35);
         GridPane.setVgrow(dlBar, Priority.ALWAYS);
         GridPane.setHgrow(dlBar, Priority.ALWAYS);
         GridPane.setValignment(dlBar, VPos.BOTTOM);
@@ -165,7 +174,6 @@ public class GamePanel extends Panel {
         Stop[] frontStops = new Stop[] {new Stop(0, Color.rgb(7, 85, 136)), new Stop(1, Color.rgb(3, 163, 219))};
         LinearGradient frontLG = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, frontStops);
         dlBar.setForegroundColor(frontLG);
-        dlBar.setProgress(100, 100);
         dlBar.setTranslateY(-20);
         dlBar.translateXProperty().bind(AxiumLauncher.getPanelManager().getStage().widthProperty().subtract(300).divide(2).subtract(dlBar.widthProperty().divide(2)));
 
@@ -259,6 +267,18 @@ public class GamePanel extends Panel {
         panel.getChildren().addAll(gameTitle, desc, videoView);
     }
 
+    public void onDownloadJobStarted() {
+
+        game.isDownloadedProperty().setValue(false);
+        dlBar.setProgress(0, 1);
+    }
+
+    public void onDownloadJobFinished() {
+
+        game.isDownloadedProperty().setValue(true);
+        dlBar.setProgress(1, 1);
+    }
+
     public static float computeStringWidth(String txt, Font font) {
 
         float result = 0;
@@ -268,5 +288,10 @@ public class GamePanel extends Panel {
         }
 
         return result;
+    }
+
+    public Game getGame() {
+
+        return game;
     }
 }

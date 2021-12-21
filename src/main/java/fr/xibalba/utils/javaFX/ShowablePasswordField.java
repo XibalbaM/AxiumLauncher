@@ -1,13 +1,18 @@
 package fr.xibalba.utils.javaFX;
 
+import de.jensd.fx.glyphs.GlyphIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+import javafx.beans.property.StringProperty;
+import javafx.css.Styleable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 public class ShowablePasswordField extends StackPane {
 
@@ -18,7 +23,7 @@ public class ShowablePasswordField extends StackPane {
 
         passwordField = new PasswordField();
         passwordField.setPrefHeight(50);
-         textField = new TextField();
+        textField = new TextField();
         passwordField.textProperty().bindBidirectional(textField.textProperty());
         textField.setPrefHeight(50);
         MaterialDesignIconView eye = new MaterialDesignIconView(MaterialDesignIcon.EYE);
