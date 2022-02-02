@@ -2,7 +2,7 @@ package fr.xibalba.launcher.ui.panels.includes.popup;
 
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
-import fr.xibalba.launcher.main.Const;
+import fr.xibalba.launcher.core.Const;
 import fr.xibalba.launcher.ui.panel.PopupPanel;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;

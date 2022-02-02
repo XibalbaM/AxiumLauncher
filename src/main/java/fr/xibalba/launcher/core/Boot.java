@@ -1,4 +1,4 @@
-package fr.xibalba.launcher.main;
+package fr.xibalba.launcher.core;
 
 import org.apache.commons.io.FileUtils;
 

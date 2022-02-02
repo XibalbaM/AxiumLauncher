@@ -1,4 +1,4 @@
-package fr.xibalba.launcher.main;
+package fr.xibalba.launcher.core;
 
 import fr.xibalba.launcher.config.ConfigManager;
 import fr.xibalba.launcher.games.Game;

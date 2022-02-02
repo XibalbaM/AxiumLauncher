@@ -1,7 +1,7 @@
 package fr.xibalba.launcher.ui.panels;
 
 import fr.xibalba.launcher.games.GamesRegistry;
-import fr.xibalba.launcher.main.AxiumLauncher;
+import fr.xibalba.launcher.core.AxiumLauncher;
 import fr.xibalba.launcher.ui.PanelManager;
 import fr.xibalba.launcher.ui.panel.Panel;
 import fr.xibalba.launcher.ui.panels.includes.GamePanel;

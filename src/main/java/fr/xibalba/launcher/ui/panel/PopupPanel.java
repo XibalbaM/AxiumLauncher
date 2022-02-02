@@ -1,6 +1,6 @@
 package fr.xibalba.launcher.ui.panel;
 
-import fr.xibalba.launcher.main.AxiumLauncher;
+import fr.xibalba.launcher.core.AxiumLauncher;
 import fr.xibalba.launcher.ui.panels.includes.popup.TopPopupPanel;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;

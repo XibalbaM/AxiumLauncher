@@ -1,6 +1,6 @@
 package fr.xibalba.launcher.games;
 
-import fr.xibalba.launcher.main.Const;
+import fr.xibalba.launcher.core.Const;
 import javafx.scene.image.Image;
 
 import java.util.HashMap;

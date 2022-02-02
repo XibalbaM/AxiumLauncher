@@ -1,6 +1,6 @@
 package fr.xibalba.launcher.ui.panel;
 
-import fr.xibalba.launcher.main.AxiumLauncher;
+import fr.xibalba.launcher.core.AxiumLauncher;
 import javafx.animation.FadeTransition;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;

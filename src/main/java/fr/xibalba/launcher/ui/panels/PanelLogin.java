@@ -1,8 +1,8 @@
 package fr.xibalba.launcher.ui.panels;
 
 import fr.xibalba.launcher.config.ConfigManager;
+import fr.xibalba.launcher.core.AxiumLauncher;
 import fr.xibalba.launcher.lang.Lang;
-import fr.xibalba.launcher.main.AxiumLauncher;
 import fr.xibalba.launcher.ui.panel.Panel;
 import fr.xibalba.utils.MdpUtils;
 import fr.xibalba.utils.javaFX.Link;

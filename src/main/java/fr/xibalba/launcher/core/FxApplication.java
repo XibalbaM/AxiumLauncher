@@ -1,4 +1,4 @@
-package fr.xibalba.launcher.main;
+package fr.xibalba.launcher.core;
 
 import javafx.application.Application;
 import javafx.stage.Stage;

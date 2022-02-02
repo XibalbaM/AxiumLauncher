@@ -1,6 +1,6 @@
 package fr.xibalba.launcher.config;
 
-import fr.xibalba.launcher.main.Const;
+import fr.xibalba.launcher.core.Const;
 
 import java.io.*;
 

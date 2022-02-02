@@ -1,7 +1,7 @@
 package fr.xibalba.launcher.ui;
 
-import fr.xibalba.launcher.main.AxiumLauncher;
-import fr.xibalba.launcher.main.Const;
+import fr.xibalba.launcher.core.AxiumLauncher;
+import fr.xibalba.launcher.core.Const;
 import fr.xibalba.launcher.ui.panel.Panel;
 import fr.xibalba.launcher.ui.panels.HomePanel;
 import fr.xibalba.launcher.ui.panels.PanelLogin;
