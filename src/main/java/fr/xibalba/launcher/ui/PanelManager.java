@@ -81,9 +81,7 @@ public class PanelManager {
         Panel panel = null;
         try {
             panel = this.currentPanel.getClass().newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
         this.centerPanel.getChildren().clear();
