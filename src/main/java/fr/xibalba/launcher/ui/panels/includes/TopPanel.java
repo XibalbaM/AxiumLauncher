@@ -12,6 +12,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -58,7 +59,7 @@ public class TopPanel extends Panel {
         menuBar.setStyle("-fx-background-color: transparent");
 
         initAxiumMenu();
-        initShowMenu();
+        initViewMenu();
         initFriendsMenu();
         initGamesMenu();
         initHelpMenu();
@@ -79,8 +80,17 @@ public class TopPanel extends Panel {
         menuBar.getMenus().add(axium);
     }
 
-    private void initShowMenu() {
+    private void initViewMenu() {
         Menu view = new Menu(Lang.getText(this, "menu.view"));
+
+        MenuItem reloadMenu = new MenuItem(Lang.getText(this, "menu.view.reload"));
+        reloadMenu.setAccelerator(KeyCombination.keyCombination("F10"));
+        reloadMenu.setOnAction(event -> {
+            AxiumLauncher.getPanelManager().update();
+            AxiumLauncher.getPanelManager().updateTopBar();
+        });
+
+        view.getItems().addAll(reloadMenu);
 
         menuBar.getMenus().add(view);
     }
@@ -99,8 +109,9 @@ public class TopPanel extends Panel {
 
     private void initHelpMenu() {//TODO TRAD all here
         Menu help = new Menu(Lang.getText(this, "menu.help"));
-        Menu language = new Menu("Language");
 
+        //only for tests
+        Menu language = new Menu("Language");
         ToggleGroup group = new ToggleGroup();
         MenuItem l_default = new MenuItem("DEFAULT");
         l_default.setOnAction(event -> {
