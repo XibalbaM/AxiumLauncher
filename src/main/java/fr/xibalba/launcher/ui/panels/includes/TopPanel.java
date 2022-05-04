@@ -9,6 +9,7 @@ import fr.xibalba.launcher.lang.Lang;
 import fr.xibalba.launcher.theme.ThemeManager;
 import fr.xibalba.launcher.ui.panel.Panel;
 import fr.xibalba.launcher.ui.panels.popups.PopupSettings;
+import fr.xibalba.launcher.ui.panels.popups.PopupTheme;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
@@ -26,7 +27,6 @@ public class TopPanel extends Panel {
 
     private GridPane topBar;
     private MenuBar menuBar = new MenuBar();
-
 
     @Override
     public void init() {
@@ -139,9 +139,15 @@ public class TopPanel extends Panel {
         });
         language.getItems().addAll(l_default, l_english, l_french);
 
+        MenuItem support = new MenuItem(Lang.getText(this, "menu.help.support"));
+        //TODO 02/02/2022 Xibalba: redirect to support
 
-        help.getItems().add(language);
+        SeparatorMenuItem separator = new SeparatorMenuItem();
 
+        MenuItem about = new MenuItem(Lang.getText(this, "menu.help.about"));
+        //TODO 02/02/2022 Xibalba: open launcher infos
+
+        help.getItems().addAll(language, support, separator, about);
         menuBar.getMenus().add(help);
     }
 
