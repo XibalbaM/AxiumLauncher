@@ -3,6 +3,7 @@ package fr.xibalba.launcher.ui.panels.includes;
 import com.sun.javafx.tk.Toolkit;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
+import fr.xibalba.launcher.core.AxiumLauncher;
 import fr.xibalba.launcher.games.Game;
 import fr.xibalba.launcher.theme.ThemeManager;
 import fr.xibalba.launcher.ui.panel.Panel;
@@ -41,8 +42,7 @@ public class GamePanel extends Panel {
     @Override
     public void init() {
         super.init();
-        //this.layout.setStyle("-fx-background-color: #" + game.getColor() + ";");
-        AxiumLauncher.getPanelManager().getLayout().setStyle("-fx-background-image: url('"+this.game.getUrl()+"');"
+        this.layout.setStyle("-fx-background-image: url('"+this.game.getUrl()+"');"
                 +"-fx-backgound-repeat: skretch;"+"-fx-backgound-position: center center;"
                 +"-fx-background-size: cover;");
 
@@ -106,13 +106,21 @@ public class GamePanel extends Panel {
         footerPane.setTranslateY(100);
         //footerPane.setStyle("-fx-background-color: #00ff11");
 
-        this.layout.getChildren().add(scrollPane);
         scrollPane.setContent(vBox);
         vBox.getChildren().add(0,topPane);
         vBox.getChildren().add(1,aboutPane);
         vBox.getChildren().add(2,newsPane);
         vBox.getChildren().add(3,footerPane);
-        this.addDlBar(this.layout);
+
+        GridPane pane = new GridPane();
+
+        this.addDlBar(pane);
+
+        RowConstraints constraints = new RowConstraints(75, 75, 75);
+        constraints.setValignment(VPos.BOTTOM);
+        this.layout.getRowConstraints().addAll(new RowConstraints(), constraints);
+        this.layout.add(scrollPane, 0, 0);
+        this.layout.add(pane, 0, 1);
     }
 
     private void addDlBar(GridPane pane) {
@@ -180,15 +188,6 @@ public class GamePanel extends Panel {
     }
 
     private void drawDlDesign(GridPane pane) {
-
-        Rectangle rectangle1 = new Rectangle();
-        GridPane.setVgrow(rectangle1, Priority.ALWAYS);
-        GridPane.setHgrow(rectangle1, Priority.ALWAYS);
-        GridPane.setValignment(rectangle1, VPos.BOTTOM);
-        GridPane.setHalignment(rectangle1, HPos.LEFT);
-        rectangle1.setFill(Color.web("#2A2E33"));
-        rectangle1.widthProperty().bind(AxiumLauncher.getPanelManager().getStage().widthProperty().subtract(300));
-        rectangle1.setHeight(75);
 
         Polygon polygon = new Polygon();
         GridPane.setVgrow(polygon, Priority.ALWAYS);
