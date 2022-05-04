@@ -64,6 +64,9 @@ public class ThemeManager {
 
     public static Theme getCurrentTheme() {
 
+        if (ConfigManager.CONFIG.currentTheme >= themes.size())
+            ConfigManager.CONFIG.currentTheme = 0;
+
         return themes.get(ConfigManager.CONFIG.currentTheme);
     }
 
