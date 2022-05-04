@@ -1,10 +1,10 @@
-package fr.xibalba.utils.javaFX;
+package fr.xibalba.launcher.ui.components;
 
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import fr.xibalba.launcher.games.Game;
-import fr.xibalba.launcher.main.AxiumLauncher;
-import fr.xibalba.launcher.main.Main;
+import fr.xibalba.launcher.core.AxiumLauncher;
+import fr.xibalba.launcher.core.Main;
 import fr.xibalba.launcher.ui.panels.includes.GamePanel;
 import javafx.geometry.Orientation;
 import javafx.geometry.VPos;
