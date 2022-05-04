@@ -1,6 +1,5 @@
 package fr.xibalba.launcher.games;
 
-import fr.xibalba.utils.annotations.BuilderProperty;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.image.Image;
@@ -28,13 +27,11 @@ public class Game {
         this.keyword = keyword;
     }
 
-    @BuilderProperty
     public String getName() {
 
         return name;
     }
 
-    @BuilderProperty
     public String getDescription() {
 
         return description;

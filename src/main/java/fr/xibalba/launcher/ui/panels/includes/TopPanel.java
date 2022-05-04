@@ -3,7 +3,6 @@ package fr.xibalba.launcher.ui.panels.includes;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import fr.xibalba.launcher.config.ConfigManager;
-import fr.xibalba.launcher.lang.Lang;
 import fr.xibalba.launcher.core.AxiumLauncher;
 import fr.xibalba.launcher.core.Const;
 import fr.xibalba.launcher.lang.Lang;
