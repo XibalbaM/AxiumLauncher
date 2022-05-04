@@ -1,5 +1,6 @@
 package fr.xibalba.launcher.core;
 
+import fr.xibalba.launcher.account.AccountManager;
 import fr.xibalba.launcher.config.ConfigManager;
 import fr.xibalba.launcher.games.Game;
 import fr.xibalba.launcher.theme.ThemeManager;
@@ -19,6 +20,7 @@ public class AxiumLauncher {
 
     private static PanelManager panelManager;
     public static AriLogger logger = new AriLogger("Axium Launcher");
+    private static boolean debugMode = false;
 
     public static void init(Stage stage) {
 
@@ -55,7 +57,9 @@ public class AxiumLauncher {
     }
 
     public static void stopApp() {
+
         ConfigManager.save();
+        AccountManager.logOut();
         System.exit(0);
     }
 
@@ -70,5 +74,15 @@ public class AxiumLauncher {
     public static Locale currentLocal() {
 
         return ConfigManager.CONFIG.language;
+    }
+
+    public static boolean isDebugMode() {
+
+        return debugMode;
+    }
+
+    public static void setDebugMode(boolean debugMode) {
+
+        AxiumLauncher.debugMode = debugMode;
     }
 }
