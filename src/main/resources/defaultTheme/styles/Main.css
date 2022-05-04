@@ -1,0 +1,19 @@
+.primary-background {
+
+    -fx-background-color: #191b1d;
+}
+
+.theme-view {
+
+    -fx-border-color: #bfbfbf;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-background-color: #191b1d;
+}
+.theme-view-selected {
+
+    -fx-border-color: #bfbfbf;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-background-color: #2e3439;
+}

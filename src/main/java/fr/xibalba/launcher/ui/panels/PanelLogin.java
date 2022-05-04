@@ -3,6 +3,7 @@ package fr.xibalba.launcher.ui.panels;
 import fr.xibalba.launcher.config.ConfigManager;
 import fr.xibalba.launcher.core.AxiumLauncher;
 import fr.xibalba.launcher.lang.Lang;
+import fr.xibalba.launcher.theme.ThemeManager;
 import fr.xibalba.launcher.ui.panel.Panel;
 import fr.xibalba.utils.MdpUtils;
 import fr.xibalba.utils.javaFX.Link;
@@ -73,7 +74,7 @@ public class PanelLogin extends Panel {
 
         GridPane.setVgrow(mainPanel, Priority.ALWAYS);
         GridPane.setHgrow(mainPanel, Priority.ALWAYS);
-        mainPanel.setStyle(getClass().getClassLoader().getResource("style/panellogin.css").toString());
+        mainPanel.setStyle(ThemeManager.getCurrentTheme().getStyle("panel-login"));
         mainPanel.setStyle("-fx-background-color: #181818;");
 
         initMainTitle();

@@ -6,6 +6,8 @@ import fr.xibalba.launcher.config.ConfigManager;
 import fr.xibalba.launcher.lang.Lang;
 import fr.xibalba.launcher.core.AxiumLauncher;
 import fr.xibalba.launcher.core.Const;
+import fr.xibalba.launcher.lang.Lang;
+import fr.xibalba.launcher.theme.ThemeManager;
 import fr.xibalba.launcher.ui.panel.Panel;
 import fr.xibalba.launcher.ui.panels.popups.PopupSettings;
 import javafx.geometry.HPos;
@@ -32,7 +34,7 @@ public class TopPanel extends Panel {
 
         super.init();
         this.topBar = this.layout;
-        this.layout.getStylesheets().add(getClass().getClassLoader().getResource("style/top.css").toString());
+        this.layout.getStylesheets().add(ThemeManager.getCurrentTheme().getStyle("top-bar"));
         this.layout.setBackground(new Background(new BackgroundFill(Color.rgb(31,35,37), CornerRadii.EMPTY, Insets.EMPTY)));
 
         initTitle();
@@ -75,7 +77,12 @@ public class TopPanel extends Panel {
             new PopupSettings();
         });
 
-        axium.getItems().add(params);
+        MenuItem themes = new MenuItem(Lang.getText(this, "themes"));
+        themes.setOnAction(event -> {
+            new PopupTheme();
+        });
+
+        axium.getItems().addAll(params, themes);
 
         menuBar.getMenus().add(axium);
     }

@@ -18,6 +18,7 @@ public class Config implements IConfig {
     public String email, mdp;
     public Map<String, GameConfig> gameConfigs;
     public boolean autoTranslate;
+    public int currentTheme;
 
     @Override
     public Config initVars() {

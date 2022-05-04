@@ -2,6 +2,7 @@ package fr.xibalba.launcher.core;
 
 import fr.xibalba.launcher.config.ConfigManager;
 import fr.xibalba.launcher.games.Game;
+import fr.xibalba.launcher.theme.ThemeManager;
 import fr.xibalba.launcher.ui.PanelManager;
 import fr.xibalba.launcher.ui.panels.PanelLang;
 import fr.xibalba.launcher.ui.panels.includes.GamePanel;
@@ -22,6 +23,7 @@ public class AxiumLauncher {
     public static void init(Stage stage) {
 
         ConfigManager.load();
+        ThemeManager.initThemes();
 
         panelManager = new PanelManager(stage);
         panelManager.init();

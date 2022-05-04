@@ -4,8 +4,7 @@ import com.sun.javafx.tk.Toolkit;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import fr.xibalba.launcher.games.Game;
-import fr.xibalba.launcher.core.AxiumLauncher;
-import fr.xibalba.launcher.core.Main;
+import fr.xibalba.launcher.theme.ThemeManager;
 import fr.xibalba.launcher.ui.panel.Panel;
 import fr.xibalba.utils.javaFX.YoutubeVideoView;
 import javafx.geometry.HPos;
@@ -50,7 +49,7 @@ public class GamePanel extends Panel {
         ScrollPane scrollPane = new ScrollPane();
         GridPane.setHgrow(scrollPane, Priority.ALWAYS);
         GridPane.setVgrow(scrollPane, Priority.ALWAYS);
-        scrollPane.getStylesheets().add(Main.class.getResource("/style/scrollbar.css").toExternalForm());
+        scrollPane.getStylesheets().add(ThemeManager.getCurrentTheme().getStyle("scrollbar"));
 
         VBox vBox = new VBox();
         GridPane.setHgrow(vBox, Priority.ALWAYS);

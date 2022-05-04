@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0",
+  "name": "Default Theme",
+  "description": "The default theme for the application",
+  "author": "Axium-centrality",
+  "link": "",
+  "icon": "",
+
+  "styles": {
+
+    "main": "styles/Main.css",
+    "panel-login": "styles/PanelLogin.css",
+    "scrollbar": "styles/scrollbar.css",
+    "top-bar": "styles/top.css"
+  }
+}

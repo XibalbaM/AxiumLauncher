@@ -2,6 +2,7 @@ package fr.xibalba.launcher.ui;
 
 import fr.xibalba.launcher.core.AxiumLauncher;
 import fr.xibalba.launcher.core.Const;
+import fr.xibalba.launcher.theme.ThemeManager;
 import fr.xibalba.launcher.ui.panel.Panel;
 import fr.xibalba.launcher.ui.panels.HomePanel;
 import fr.xibalba.launcher.ui.panels.PanelLogin;
@@ -48,7 +49,7 @@ public class PanelManager {
         this.stage.show();
 
         this.layout = new GridPane();
-        this.layout.getStylesheets().add(getClass().getClassLoader().getResource("style/Main.css").toString());
+        this.layout.getStylesheets().add(ThemeManager.getCurrentTheme().getStyle("main"));
         this.layout.setStyle(AriLibFX.setResponsiveBackground("https://www.dropbox.com/s/p33vgwl8ewdx0v4/Axium%20Games%20Logo.png?dl=1"));
         this.stage.setScene(new Scene(this.layout));
 

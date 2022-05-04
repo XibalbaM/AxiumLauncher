@@ -3,6 +3,7 @@ package fr.xibalba.launcher.ui.panels.includes.popup;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 import fr.xibalba.launcher.core.Const;
+import fr.xibalba.launcher.theme.ThemeManager;
 import fr.xibalba.launcher.ui.panel.PopupPanel;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -25,7 +26,7 @@ public class TopPopupPanel {
         GridPane.setVgrow(layout, Priority.ALWAYS);
         this.topBar = this.layout;
         this.popup = popup;
-        this.layout.getStylesheets().add(getClass().getClassLoader().getResource("style/top.css").toString());
+        this.layout.getStylesheets().add(ThemeManager.getCurrentTheme().getStyle("top-bar"));
         this.layout.setBackground(new Background(new BackgroundFill(Color.rgb(31,35,37), CornerRadii.EMPTY, Insets.EMPTY)));
 
         initTitle();
