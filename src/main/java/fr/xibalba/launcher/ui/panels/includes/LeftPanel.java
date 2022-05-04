@@ -2,7 +2,7 @@ package fr.xibalba.launcher.ui.panels.includes;
 
 import fr.xibalba.launcher.games.GamesRegistry;
 import fr.xibalba.launcher.ui.panel.Panel;
-import fr.xibalba.utils.javaFX.GameButton;
+import fr.xibalba.launcher.ui.components.GameButton;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Separator;

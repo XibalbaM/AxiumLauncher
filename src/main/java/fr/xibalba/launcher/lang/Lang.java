@@ -3,7 +3,7 @@ package fr.xibalba.launcher.lang;
 import fr.xibalba.launcher.config.ConfigManager;
 import fr.xibalba.launcher.core.AxiumLauncher;
 import fr.xibalba.launcher.ui.panel.Panel;
-import fr.xibalba.utils.StringUtils;
+import fr.xibalba.utils.text.StringUtils;
 
 import java.util.Locale;
 import java.util.MissingResourceException;

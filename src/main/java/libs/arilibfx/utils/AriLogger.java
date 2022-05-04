@@ -1,6 +1,6 @@
 package libs.arilibfx.utils;
 
-import fr.xibalba.utils.ANSI;
+import fr.xibalba.utils.text.ANSI;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
