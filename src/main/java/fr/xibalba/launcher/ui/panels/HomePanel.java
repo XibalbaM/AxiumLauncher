@@ -3,7 +3,6 @@ package fr.xibalba.launcher.ui.panels;
 import fr.xibalba.launcher.games.GamesRegistry;
 import fr.xibalba.launcher.core.AxiumLauncher;
 import fr.xibalba.launcher.ui.PanelManager;
-import fr.xibalba.launcher.ui.panel.Panel;
 import fr.xibalba.launcher.ui.panels.includes.GamePanel;
 import fr.xibalba.launcher.ui.panels.includes.LeftPanel;
 import javafx.geometry.HPos;
@@ -11,7 +10,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
-public class HomePanel extends Panel {
+public class HomePanel extends LauncherPanel {
 
     private final LeftPanel leftPanel = new LeftPanel();
     private final GridPane centerPanel = new GridPane();
@@ -25,11 +24,11 @@ public class HomePanel extends Panel {
         columnConstraints.setMinWidth(300);
         columnConstraints.setMaxWidth(300);
 
-        this.layout.getColumnConstraints().addAll(columnConstraints, new ColumnConstraints());
-        this.layout.add(leftPanel.getLayout(),0,  0);
+        this.panel.getColumnConstraints().addAll(columnConstraints, new ColumnConstraints());
+        this.panel.add(leftPanel.getLayout(),0,  0);
         this.leftPanel.init();
 
-        this.layout.add(centerPanel,1,  0);
+        this.panel.add(centerPanel,1,  0);
         GridPane.setHgrow(centerPanel, Priority.ALWAYS);
         GridPane.setVgrow(centerPanel, Priority.ALWAYS);
 
