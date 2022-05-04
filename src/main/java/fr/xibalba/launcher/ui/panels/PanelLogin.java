@@ -1,5 +1,7 @@
 package fr.xibalba.launcher.ui.panels;
 
+import fr.xibalba.launcher.account.AccountManager;
+import fr.xibalba.launcher.account.LoginResponse;
 import fr.xibalba.launcher.config.ConfigManager;
 import fr.xibalba.launcher.core.AxiumLauncher;
 import fr.xibalba.launcher.lang.Lang;
@@ -12,16 +14,19 @@ import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Cursor;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class PanelLogin extends Panel {
 
     private final GridPane loginPanel = new GridPane();
     private final GridPane mainPanel = new GridPane();
     private final GridPane bottomPanel = new GridPane();
+    private Label errorEmail, errorPassword, errorOther;
     private TextField emailField;
     private ShowablePasswordField passwordField;
     private CheckBox rememberPassword;
@@ -32,19 +37,17 @@ public class PanelLogin extends Panel {
 
         super.init();
 
-        if (Boolean.valueOf(ConfigManager.CONFIG.rememberPassword)) {
-            if (ConfigManager.CONFIG.email != "" && ConfigManager.CONFIG.mdp != "") {
-                if (tryLogin(ConfigManager.CONFIG.email, MdpUtils.decrypt(ConfigManager.CONFIG.mdp))) {
-                    AxiumLauncher.getPanelManager().showPanel(AxiumLauncher.getPanelManager().getHomePanel());
-                }
-            }
-        }
-
         initLoginPanel();
         initMain();
         initBottom();
 
         this.layout.getChildren().add(loginPanel);
+
+        if (Boolean.valueOf(ConfigManager.CONFIG.rememberPassword)) {
+            if (ConfigManager.CONFIG.email != "" && ConfigManager.CONFIG.mdp != "") {
+                login(ConfigManager.CONFIG.email, ConfigManager.CONFIG.mdp);
+            }
+        }
     }
 
     private void initLoginPanel() {
@@ -55,7 +58,7 @@ public class PanelLogin extends Panel {
         loginPanel.setMaxHeight(580);
 
         loginPanel.getStylesheets().clear();
-        loginPanel.getStylesheets().add(getClass().getClassLoader().getResource("style/panellogin.css").toString());
+        loginPanel.getStylesheets().add(ThemeManager.getCurrentTheme().getStyle("panel-login"));
 
         GridPane.setVgrow(loginPanel, Priority.ALWAYS);
         GridPane.setHgrow(loginPanel, Priority.ALWAYS);
@@ -80,43 +83,11 @@ public class PanelLogin extends Panel {
         initMainTitle();
         initMainEmail();
         initMainPassword();
+        initRememberPass();
+        initConnectionButton();
+        initOtherMods();
 
-        rememberPassword = new CheckBox(Lang.getText(this, "rememberPassword"));
-        GridPane.setVgrow(rememberPassword, Priority.ALWAYS);
-        GridPane.setHgrow(rememberPassword, Priority.ALWAYS);
-        GridPane.setValignment(rememberPassword, VPos.TOP);
-        GridPane.setHalignment(rememberPassword, HPos.LEFT);
-        rememberPassword.setSelected(ConfigManager.CONFIG.rememberPassword);
-        rememberPassword.setStyle("-fx-font-size: 16px; -fx-text-fill: #e5e5e5");
-        rememberPassword.setTranslateX(37.5);
-        rememberPassword.setTranslateY(280);
-        rememberPassword.selectedProperty().addListener(observable -> {
-            ConfigManager.CONFIG.rememberPassword = rememberPassword.isSelected();
-
-            if (rememberPassword.isSelected()) {
-                ConfigManager.CONFIG.mdp = MdpUtils.encrypt(passwordField.passwordField.getText());
-            } else {
-                ConfigManager.CONFIG.mdp = "";
-            }
-        });
-
-        connectionButton = new Button("Se connecter"); //TODO translate
-        GridPane.setVgrow(connectionButton, Priority.ALWAYS);
-        GridPane.setHgrow(connectionButton, Priority.ALWAYS);
-        GridPane.setValignment(connectionButton, VPos.CENTER);
-        GridPane.setHalignment(connectionButton, HPos.LEFT);
-        connectionButton.setTranslateX(37.5);
-        connectionButton.setTranslateY(80);
-        connectionButton.setMinWidth(325);
-        connectionButton.setMinHeight(50);
-        connectionButton.setStyle("-fx-background-color: #007dbe; -fx-border-radius: 0px; -fx-background-insets: 0; -fx-font-size: 14px; -fx-text-fill: #fff;");
-        connectionButton.setCursor(Cursor.HAND);
-        connectionButton.setOnMouseEntered(e -> connectionButton.setStyle("-fx-background-color: #0079b7; -fx-border-radius: 0px; -fx-background-insets: 0; -fx-font-size: 14px; -fx-text-fill: #fff;"));
-        connectionButton.setOnMouseExited(e -> connectionButton.setStyle("-fx-background-color: #007dbe; -fx-border-radius: 0px; -fx-background-insets: 0; -fx-font-size: 14px; -fx-text-fill: #fff;"));
-        connectionButton.setOnMouseClicked(this::login);
-        this.checkFieldContent();
-
-        this.mainPanel.getChildren().addAll(rememberPassword, connectionButton);
+        this.mainPanel.getChildren().addAll(rememberPassword, connectionButton, errorOther);
     }
 
     private void initMainTitle() {
@@ -149,9 +120,21 @@ public class PanelLogin extends Panel {
         GridPane.setHgrow(email, Priority.ALWAYS);
         GridPane.setValignment(email, VPos.TOP);
         GridPane.setHalignment(email, HPos.LEFT);
-        email.setStyle("-fx-text-fill: #95bad3; -fx-font-size: 14px");
+        email.setFont(new Font(14));
+        email.setTextFill(Color.web("#95bad3"));
         email.setTranslateY(110);
         email.setTranslateX(37.5);
+
+        errorEmail = new Label();
+        errorEmail.setVisible(false);
+        GridPane.setVgrow(errorEmail, Priority.ALWAYS);
+        GridPane.setHgrow(errorEmail, Priority.ALWAYS);
+        GridPane.setValignment(errorEmail, VPos.TOP);
+        GridPane.setHalignment(errorEmail, HPos.LEFT);
+        errorEmail.setFont(new Font(14));
+        errorEmail.setTextFill(Color.web("#c70808"));
+        errorEmail.setTranslateY(110);
+        errorEmail.setTranslateX(email.getTranslateX() + getWidthOfText(email.getText(), email.getFont()) + 20);
 
         emailField = new TextField(ConfigManager.CONFIG.email);
         GridPane.setVgrow(emailField, Priority.ALWAYS);
@@ -178,7 +161,7 @@ public class PanelLogin extends Panel {
         emailSeparator.setMaxWidth(325);
         emailSeparator.setStyle("-fx-background-color: #fff; -fx-opacity: 40%;");
 
-        mainPanel.getChildren().addAll(email, emailField, emailSeparator);
+        mainPanel.getChildren().addAll(email, errorEmail, emailField, emailSeparator);
     }
 
     private void initMainPassword() {
@@ -188,9 +171,21 @@ public class PanelLogin extends Panel {
         GridPane.setHgrow(password, Priority.ALWAYS);
         GridPane.setValignment(password, VPos.TOP);
         GridPane.setHalignment(password, HPos.LEFT);
-        password.setStyle("-fx-text-fill: #95bad3; -fx-font-size: 14px");
+        password.setFont(new Font(14));
+        password.setTextFill(Color.web("#95bad3"));
         password.setTranslateY(200);
         password.setTranslateX(37.5);
+
+        errorPassword = new Label();
+        errorPassword.setVisible(false);
+        GridPane.setVgrow(errorPassword, Priority.ALWAYS);
+        GridPane.setHgrow(errorPassword, Priority.ALWAYS);
+        GridPane.setValignment(errorPassword, VPos.TOP);
+        GridPane.setHalignment(errorPassword, HPos.LEFT);
+        errorPassword.setFont(new Font(12));
+        errorPassword.setTextFill(Color.web("#c70808"));
+        errorPassword.setTranslateY(200);
+        errorPassword.setTranslateX(password.getTranslateX() + getWidthOfText(password.getText(), password.getFont()) + 20);
 
         passwordField = new ShowablePasswordField();
         GridPane.setVgrow(passwordField, Priority.ALWAYS);
@@ -225,7 +220,73 @@ public class PanelLogin extends Panel {
         passwordSeparator.setMaxWidth(325);
         passwordSeparator.setStyle("-fx-background-color: #fff; -fx-opacity: 40%;");
 
-        mainPanel.getChildren().addAll(password, passwordField, passwordSeparator);
+        mainPanel.getChildren().addAll(password, errorPassword, passwordField, passwordSeparator);
+    }
+
+    private void initRememberPass() {
+
+        rememberPassword = new CheckBox(Lang.getText(this, "rememberPassword"));
+        GridPane.setVgrow(rememberPassword, Priority.ALWAYS);
+        GridPane.setHgrow(rememberPassword, Priority.ALWAYS);
+        GridPane.setValignment(rememberPassword, VPos.TOP);
+        GridPane.setHalignment(rememberPassword, HPos.LEFT);
+        rememberPassword.setSelected(ConfigManager.CONFIG.rememberPassword);
+        rememberPassword.setStyle("-fx-font-size: 16px; -fx-text-fill: #e5e5e5");
+        rememberPassword.setTranslateX(37.5);
+        rememberPassword.setTranslateY(280);
+        rememberPassword.selectedProperty().addListener(observable -> {
+            ConfigManager.CONFIG.rememberPassword = rememberPassword.isSelected();
+
+            if (rememberPassword.isSelected()) {
+                ConfigManager.CONFIG.mdp = MdpUtils.encrypt(passwordField.passwordField.getText());
+            } else {
+                ConfigManager.CONFIG.mdp = "";
+            }
+        });
+    }
+
+    private void initConnectionButton() {
+
+        connectionButton = new Button("Se connecter"); //TODO translate
+        GridPane.setVgrow(connectionButton, Priority.ALWAYS);
+        GridPane.setHgrow(connectionButton, Priority.ALWAYS);
+        GridPane.setValignment(connectionButton, VPos.CENTER);
+        GridPane.setHalignment(connectionButton, HPos.LEFT);
+        connectionButton.setTranslateX(37.5);
+        connectionButton.setTranslateY(80);
+        connectionButton.setMinWidth(325);
+        connectionButton.setMinHeight(50);
+        connectionButton.setStyle("-fx-background-color: #007dbe; -fx-border-radius: 0px; -fx-background-insets: 0; -fx-font-size: 14px; -fx-text-fill: #fff;");
+        connectionButton.setCursor(Cursor.HAND);
+        connectionButton.setOnMouseEntered(e -> connectionButton.setStyle("-fx-background-color: #0079b7; -fx-border-radius: 0px; -fx-background-insets: 0; -fx-font-size: 14px; -fx-text-fill: #fff;"));
+        connectionButton.setOnMouseExited(e -> connectionButton.setStyle("-fx-background-color: #007dbe; -fx-border-radius: 0px; -fx-background-insets: 0; -fx-font-size: 14px; -fx-text-fill: #fff;"));
+        connectionButton.setOnMouseClicked(event -> login(emailField.getText(), passwordField.passwordField.getText()));
+        this.checkFieldContent();
+
+        errorOther = new Label();
+        errorOther.setVisible(false);
+        GridPane.setVgrow(errorOther, Priority.ALWAYS);
+        GridPane.setHgrow(errorOther, Priority.ALWAYS);
+        GridPane.setValignment(errorOther, VPos.CENTER);
+        GridPane.setHalignment(errorOther, HPos.CENTER);
+        errorOther.setStyle("-fx-text-fill: #c70808; -fx-font-size: 14px");
+        connectionButton.applyCss();
+        errorOther.setTranslateY(connectionButton.getTranslateY() + connectionButton.getMinHeight() + 20);
+    }
+
+    private void initOtherMods() {
+
+        Separator otherSeparator = new Separator();
+        GridPane.setVgrow(otherSeparator, Priority.ALWAYS);
+        GridPane.setHgrow(otherSeparator, Priority.ALWAYS);
+        GridPane.setValignment(otherSeparator, VPos.BOTTOM);
+        GridPane.setHalignment(otherSeparator, HPos.CENTER);
+        otherSeparator.setTranslateY(-140);
+        otherSeparator.setMinWidth(325);
+        otherSeparator.setMaxWidth(325);
+        otherSeparator.setStyle("-fx-background-color: #fff; -fx-opacity: 50%;");
+
+        mainPanel.getChildren().add(otherSeparator);
     }
 
     private void initBottom() {
@@ -259,11 +320,40 @@ public class PanelLogin extends Panel {
         connectionButton.setDisable(!((emailField.getText() != null && emailField.getText() != "") && (passwordField.passwordField.getText() != null && passwordField.passwordField.getText() != "")));
     }
 
-    private void login(MouseEvent event) {
+    private void login(String email, String password) {
 
-        /*if (tryLogin(emailField.getText(), passwordField.passwordField.getText())) {
+        errorEmail.setVisible(false);
+        errorPassword.setVisible(false);
+        errorOther.setVisible(false);
 
-            AxiumLauncher.getConfigManager().setProperty(Config.EMAIL, emailField.getText());
+        LoginResponse loginResponse = AccountManager.tryLogin(email, password);
+
+        if (loginResponse.succeed()) {
+
+            AxiumLauncher.getPanelManager().showPanel(AxiumLauncher.getPanelManager().getHomePanel());
+        } else {
+
+            System.out.println(loginResponse.error().getErrorText() + loginResponse.error().getField());
+            switch (loginResponse.error().getField()) {
+
+                case 0: {
+                    errorEmail.setText(loginResponse.error().getErrorText());
+                    errorEmail.setVisible(true);
+                    break;
+                }
+                case 1: {
+                    errorPassword.setText(loginResponse.error().getErrorText());
+                    errorPassword.setVisible(true);
+                    break;
+                }
+                default: {
+                    errorOther.setText(loginResponse.error().getErrorText());
+                    errorOther.setVisible(true);
+                }
+            }
+        }
+
+            /*AxiumLauncher.getConfigManager().setProperty(Config.EMAIL, emailField.getText());
 
             boolean rememberPassword = Boolean.valueOf(AxiumLauncher.getConfigManager().getProperty(Config.REMEMBER_PASSWORD));
             AxiumLauncher.getConfigManager().setProperty(Config.REMEMBER_PASSWORD, String.valueOf(rememberPassword));
@@ -271,19 +361,20 @@ public class PanelLogin extends Panel {
             if (rememberPassword) {
 
                 AxiumLauncher.getConfigManager().setProperty(Config.PASSWORD, MdpUtils.encrypt(passwordField.passwordField.getText()));
-            }
-        }*/
+            }*/
 
-        AxiumLauncher.getPanelManager().showPanel(AxiumLauncher.getPanelManager().getHomePanel());
-    }
-
-    private boolean tryLogin(String email, String password) {
-
-        return false;
     }
 
     @Override
     public String getName() {
         return "panellogin";
+    }
+
+    public static double getWidthOfText(String text, Font font) {
+
+        Text t = new Text(text);
+        t.setFont(font);
+
+        return t.getBoundsInLocal().getWidth();
     }
 }
