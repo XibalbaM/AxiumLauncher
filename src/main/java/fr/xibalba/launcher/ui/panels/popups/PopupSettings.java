@@ -22,4 +22,10 @@ public class PopupSettings extends PopupPanel {
             close();
         });
     }
+
+    @Override
+    public String getName() {
+
+        return "PopupSettings";
+    }
 }

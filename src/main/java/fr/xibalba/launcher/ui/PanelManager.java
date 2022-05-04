@@ -4,6 +4,7 @@ import fr.xibalba.launcher.core.AxiumLauncher;
 import fr.xibalba.launcher.core.Const;
 import fr.xibalba.launcher.theme.ThemeManager;
 import fr.xibalba.launcher.ui.panel.Panel;
+import fr.xibalba.launcher.ui.panel.PopupPanel;
 import fr.xibalba.launcher.ui.panels.HomePanel;
 import fr.xibalba.launcher.ui.panels.PanelLogin;
 import fr.xibalba.launcher.ui.panels.includes.TopPanel;
@@ -18,6 +19,9 @@ import javafx.stage.StageStyle;
 import libs.arilibfx.AriLibFX;
 import libs.arilibfx.ui.utils.ResizeHelper;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class PanelManager {
 
     private final Stage stage;
@@ -25,6 +29,7 @@ public class PanelManager {
     private TopPanel topPanel = new TopPanel();
     private GridPane centerPanel = new GridPane();
     private Panel currentPanel;
+    private Map<String, PopupPanel> popups = new HashMap<>();
 
     private final PanelLogin panelLogin = new PanelLogin();
     private final HomePanel homePanel = new HomePanel();
@@ -125,5 +130,24 @@ public class PanelManager {
     public GridPane getLayout() {
 
         return layout;
+    }
+
+    public PanelManager addPopupPanel(String name, PopupPanel panel) {
+
+        this.popups.put(name, panel);
+
+    	return this;
+    }
+
+    public PopupPanel getPopupPanel(String name) {
+
+    	return this.popups.get(name);
+    }
+
+    public PanelManager removePopupPanel(String name) {
+
+        this.popups.remove(name);
+
+    	return this;
     }
 }

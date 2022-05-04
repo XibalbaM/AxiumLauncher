@@ -10,9 +10,8 @@ import javafx.scene.layout.RowConstraints;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import libs.arilibfx.ui.utils.ResizeHelper;
 
-public class PopupPanel extends Stage {
+public abstract class PopupPanel extends Stage {
 
     protected GridPane layout = new GridPane();
     protected GridPane centerPanel = new GridPane();
@@ -38,17 +37,13 @@ public class PopupPanel extends Stage {
         GridPane.setVgrow(this.centerPanel, Priority.ALWAYS);
         GridPane.setHgrow(this.centerPanel, Priority.ALWAYS);
 
-        /*Rectangle rect = new Rectangle(width - 2, height - 2);
-        rect.setStroke(Color.gray(0.2));
-        rect.setStrokeWidth(1);
-        rect.setStrokeType(StrokeType.OUTSIDE);
-        rect.setFill(Color.TRANSPARENT);
-        rect.setMouseTransparent(true);
-        this.layout.getChildren().add(rect);*/
-
         Scene dialogScene = new Scene(this.layout, width, height);
         this.setScene(dialogScene);
-        ResizeHelper.addResizeListener(this);
+        this.setResizable(false);
         this.show();
+        AxiumLauncher.getPanelManager().addPopupPanel(this.getName(), this);
+        this.layout.getStyleClass().add("primary-background");
     }
+
+    public abstract String getName();
 }
